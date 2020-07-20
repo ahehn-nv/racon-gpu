@@ -13,22 +13,16 @@ namespace racon {
 
 std::atomic<uint32_t> CUDABatchAligner::batches;
 
-std::unique_ptr<CUDABatchAligner> createCUDABatchAligner(uint32_t max_query_size,
-                                                         uint32_t max_target_size,
-                                                         uint32_t max_alignments,
+std::unique_ptr<CUDABatchAligner> createCUDABatchAligner(uint32_t max_bandwidth,
                                                          uint32_t device_id,
                                                          int64_t max_gpu_memory)
 {
-    return std::unique_ptr<CUDABatchAligner>(new CUDABatchAligner(max_query_size,
-                                                                  max_target_size,
-                                                                  max_alignments,
+    return std::unique_ptr<CUDABatchAligner>(new CUDABatchAligner(max_bandwidth,
                                                                   device_id,
                                                                   max_gpu_memory));
 }
 
-CUDABatchAligner::CUDABatchAligner(uint32_t max_query_size,
-                                   uint32_t max_target_size,
-                                   uint32_t max_alignments,
+CUDABatchAligner::CUDABatchAligner(uint32_t max_bandwidth,
                                    uint32_t device_id,
                                    int64_t max_gpu_memory)
     : overlaps_()
@@ -40,10 +34,8 @@ CUDABatchAligner::CUDABatchAligner(uint32_t max_query_size,
 
     CGA_CU_CHECK_ERR(cudaStreamCreate(&stream_));
 
-    aligner_ = claragenomics::cudaaligner::create_aligner(max_query_size,
-                                                          max_target_size,
-                                                          max_alignments,
-                                                          claragenomics::cudaaligner::AlignmentType::global_alignment,
+    aligner_ = claragenomics::cudaaligner::create_aligner(claragenomics::cudaaligner::AlignmentType::global_alignment,
+                                                          max_bandwidth,
                                                           stream_,
                                                           device_id,
                                                           max_gpu_memory);
