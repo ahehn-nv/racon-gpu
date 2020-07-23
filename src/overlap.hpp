@@ -82,6 +82,7 @@ public:
 
 #ifdef CUDA_ENABLED
     friend class CUDABatchAligner;
+    friend class CUDAPolisher;
 #endif
 private:
     Overlap(uint64_t a_id, uint64_t b_id, double accuracy, uint32_t minmers,

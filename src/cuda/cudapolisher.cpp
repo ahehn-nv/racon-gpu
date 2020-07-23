@@ -13,6 +13,7 @@
 #include "logger.hpp"
 #include "cudapolisher.hpp"
 #include <claragenomics/utils/cudautils.hpp>
+#include <algorithm>
 
 #include "bioparser/bioparser.hpp"
 
@@ -233,6 +234,9 @@ void CUDAPolisher::find_overlap_breaking_points(std::vector<std::unique_ptr<Over
     logger_->log();
 
     //exit(0);
+    int64_t missing_overlaps = std::count_if(begin(overlaps), end(overlaps),[](std::unique_ptr<Overlap> const& o){ return o->cigar_.empty();});
+
+    std::cerr << "Missing overlaps: " << missing_overlaps << " / " << overlaps.size() << std::endl;
     Polisher::find_overlap_breaking_points(overlaps);
 }
 
