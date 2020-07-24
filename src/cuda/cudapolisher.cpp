@@ -114,6 +114,7 @@ void CUDAPolisher::find_overlap_breaking_points(std::vector<std::unique_ptr<Over
             while(true)
             {
                 auto range = fill_next_batch(batch);
+                std::cerr << "alignment batch: " << range.second - range.first << "alignments ("<< range.first << " - " << range.second << ")" << std::endl;
                 if (batch->hasOverlaps())
                 {
                     // Launch workload.
